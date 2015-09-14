@@ -2,10 +2,10 @@
 # project56
 project of group flats
 
-Niels van Schooten
-Björn Valken
-Ashwen Alakhramsing
-Martijn Dolders
+- Niels van Schooten
+- Björn Valken
+- Ashwen Alakhramsing
+- Martijn Dolders
 
 
 ### Issue tracker:
