@@ -1,5 +1,7 @@
 __author__ = 'Niels van Schooten'
+__email__ = 'nielsvanschooten@gmail.com'
 
+import pypyodbc
 
 class DatabaseManager:
     """
@@ -13,14 +15,15 @@ class DatabaseManager:
             The database manager, this manager manages the connection between the system and the database.
             You can use this manager to push a query, send a dataset and change the database connection.
         """
-        pass
+        self.connectionString = r"Driver={SQL Server};Server=145.24.222.206;Database=INFPRJ2110;Trusted_Connection=yes;"
+
 
     def ExecuteQuery(self, query: str) -> bool:
         """
             Execute a query given to this function.
             the query is used on the current database connection returns true if the query completed successfully.
         """
-        pass
+        connection = pypyodbc.connect(self.connectionString)
 
     def ConnectDatabase(self, dbConnectionString: str) -> bool:
         """
