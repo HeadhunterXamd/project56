@@ -1,6 +1,8 @@
 __author__ = 'Niels van Schooten'
 __email__ = 'nielsvanschooten@gmail.com'
 
+from DataParser import DataRowParser
+
 
 class DataInputManager:
     """
@@ -14,19 +16,35 @@ class DataInputManager:
             Dataparser. This will collect the data line for line and send them properly through as a string.
         """
         self.filename = ""
+        self.Dataparser = None
 
-    def Collect(self, filename:str=None):
+    def Collect(self, filename:str=None) -> None:
+        """
+            Collects line for line the data of the corresponding input.
+            This can be a datastream or a file.
         """
 
-            :param filename:
-            :return:
-        """
+        # for now get the file instead of the data stream.
         file = None
         if filename is None:
             file = open(self.filename, "r")
         else:
             file = open(filename, "r")
 
+        # create the dataParser mapping, these are the names used for the columns
+        mapperline = file.readline().split(";")
+        self.Dataparser = DataRowParser(mapperline)
+
+        # read all the lines given from the file.
+        for line in file.readlines():
+            pass
+
+        # never forget to close the file.
+        file.close()
+
 
     def PassThrough(self,line:str) -> None:
+        """
+            Pass the data to the Parser
+        """
         pass
