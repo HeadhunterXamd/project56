@@ -26,6 +26,7 @@ class DatabaseManager:
         self.serverAddress = "localhost"
         self.DatabaseName = "INFPRJ2110"
         self.connection = None
+        _mssql.login_timeout = 10
 
     def ExecuteQuery(self, query: str) -> bool:
         """
@@ -35,7 +36,7 @@ class DatabaseManager:
 
         # connect with the database.
         print("making connection to the database")
-        _mssql.connect(server=self.serverAddress, user=self.username, password=self.password,
+        self.connection = _mssql.connect(server=self.serverAddress, user=self.username, password=self.password,
                                          database=self.DatabaseName)
         self.connection.execute_query(query)
         self.connection.commit()
@@ -66,5 +67,5 @@ class DatabaseManager:
         file.close()
 
 
-dbman = DatabaseManager()
-dbman.ExecuteQuery("")
+dbman = DatabaseManager("test", "test")
+dbman.ExecuteQuery("SELECT * FROM Connections")
