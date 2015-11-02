@@ -9,3 +9,6 @@ inputman = DataInputManager()
 
 inputman.filename = ""
 inputman.Collect()
+
+input("please insert your username:  ")
+input("please insert your password:  ")
