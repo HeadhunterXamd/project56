@@ -53,19 +53,8 @@ class DatabaseManager:
             tries to send the given dataset to the database in the given format(the key is the column name).
             returns true if the dataset is successfully sent.
         """
-        file = open("FullDatabase.json", "r+")
-        data = json.load(file)
         for key in dataset.keys():
-            for localkey in data.keys():
-                if key is localkey:
-                    for item in data[key]:
-                        dataset[key].append(item)
-                else:
-                    dataset[localkey] = data[localkey]
+            for index in range(len(dataset[key])):
+                #send(dataset[key][index])
+                pass
 
-        json.dump(dataset, file)
-        file.close()
-
-
-dbman = DatabaseManager("test", "test")
-dbman.ExecuteQuery("SELECT * FROM Connections")

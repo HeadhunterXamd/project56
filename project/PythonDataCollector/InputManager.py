@@ -2,6 +2,7 @@ __author__ = 'Niels van Schooten'
 __email__ = 'nielsvanschooten@gmail.com'
 
 from DataParser import DataRowParser
+import json
 
 
 class DataInputManager:
@@ -23,7 +24,7 @@ class DataInputManager:
             Collects line for line the data of the corresponding input.
             This can be a datastream or a file.
         """
-
+        jsonData = json.load(input)
         # for now get the file instead of the data stream.
         file = None
         if filename is None:
@@ -31,13 +32,15 @@ class DataInputManager:
         else:
             file = open(filename, "r")
 
+        liner = file.readline()
+        liner = liner.strip("\n")
         # create the dataParser mapping, these are the names used for the columns
-        mapperline = file.readline().split(";")
+        mapperline = liner.split(";")
         self.Dataparser = DataRowParser(mapperline)
 
         # read all the lines given from the file.
         for line in file.readlines():
-            pass
+            self.Dataparser.ParseLine(line.strip())
 
         # never forget to close the file.
         file.close()
