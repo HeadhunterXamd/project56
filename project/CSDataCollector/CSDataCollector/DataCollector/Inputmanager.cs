@@ -3,7 +3,7 @@ using System.Net;
 using uPLibrary.Networking.M2Mqtt;
 using uPLibrary.Networking.M2Mqtt.Messages;
 
-namespace DataCollector.Input
+namespace CSDataCollector.Input
 {
 
     public class InputManager
