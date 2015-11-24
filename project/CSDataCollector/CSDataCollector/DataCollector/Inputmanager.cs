@@ -16,7 +16,7 @@ namespace CSDataCollector.Input
         
         /// <summary>
         /// The data parser this will be used to parse the incoming data.
-        /// </summary>
+        /// </summary> 
         private DataParser parser { get; set; }
 
         /// <summary>
@@ -46,9 +46,15 @@ namespace CSDataCollector.Input
             Client.MqttMsgPublishReceived += MessageReceived;
 	    }
 
+
+        /// <summary>
+        /// The event for incoming messages.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         public void MessageReceived(object sender, MqttMsgPublishEventArgs e)
         {
-            throw new NotImplementedException();
+            parser.ParseData(e.Message);
         }
 
 
