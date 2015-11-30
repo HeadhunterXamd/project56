@@ -11,6 +11,7 @@ namespace CSDataCollector.Input
 
         /// <summary>
         /// The buffer which contains the data to be sent to the DBManager
+        /// The data is topic->column->list of data in chronological order.
         /// </summary>
         public Dictionary<string, Dictionary<string, List<string>>> buffer { get; set; }
 
