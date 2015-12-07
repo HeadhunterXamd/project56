@@ -3,6 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Newtonsoft.Json;
+using CSDataCollector.WrapperClasses;
 
 namespace CSDataCollector.Input
 {
@@ -10,7 +12,7 @@ namespace CSDataCollector.Input
     {
 
         /// <summary>
-        /// The buffer which contains the data to be sent to the DBManager
+        /// The buffer which contains the data to be sent to the DBManager <para/>
         /// The data is topic->column->list of data in chronological order.
         /// </summary>
         public Dictionary<string, Dictionary<string, List<string>>> buffer { get; set; }
@@ -18,6 +20,7 @@ namespace CSDataCollector.Input
         public delegate void OnBufferFull(Dictionary<string, Dictionary<string, List<string>>> data);
 
         private event OnBufferFull BufferFull;
+
 
         private static DataParser m_cInstance;
         
@@ -54,8 +57,10 @@ namespace CSDataCollector.Input
         /// Parse the byte array into a readable string.
         /// </summary>
         /// <param name="_lData"></param>
-        public void ParseData(byte[] _lData)
+        public void ParseData(byte[] _lData, string _sTopic)
         {
+            string data = Encoding.UTF8.GetString(_lData);
+            DecodeData(data, _sTopic);
 
         }
 
@@ -63,9 +68,33 @@ namespace CSDataCollector.Input
         /// Here we decode the JSON code.
         /// </summary>
         /// <param name="_sData"></param>
-        public void DecodeData(string _sData)
+        public void DecodeData(string _sData, string _sTopic)
         {
-
+            Topic item = null;
+            if (_sTopic.Equals("Connection"))
+            {
+               item = JsonConvert.DeserializeObject<Connection>(_sData);
+            }
+            else if (_sTopic.Equals("Event"))
+            {
+                item = JsonConvert.DeserializeObject<Event>(_sData);
+            }
+            else if (_sTopic.Equals("Monitoring"))
+            {
+                item = JsonConvert.DeserializeObject<Monitoring>(_sData);
+            }
+            else if (_sTopic.Equals("Position"))
+            {
+                item = JsonConvert.DeserializeObject<Position>(_sData);
+            }
+            else
+            {
+                Console.WriteLine("The topic is not correct. " + _sTopic);
+                return;
+            }
+            item.MessageTopic = _sTopic;
+            Connection test = item as Connection;
+            Console.WriteLine(test.dateTime);
         }
 
         /// <summary>

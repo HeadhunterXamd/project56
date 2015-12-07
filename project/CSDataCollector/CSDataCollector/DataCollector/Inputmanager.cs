@@ -1,5 +1,5 @@
 ﻿using System;
-using System.Net;
+using System.Text;
 using uPLibrary.Networking.M2Mqtt;
 using uPLibrary.Networking.M2Mqtt.Messages;
 
@@ -20,9 +20,14 @@ namespace CSDataCollector.Input
         private DataParser parser { get; set; }
 
         /// <summary>
+        /// Set the connected bool as flag for if the connection is enabled.
+        /// </summary>
+        public bool Connected { get; private set; }
+
+        /// <summary>
         /// The subjects we will subscribe to.
         /// </summary>
-        private string[] subjects = new string[4] {"Connection", "Event", "Monitoring", "Position" };
+        private string[] subjects = new string[4] {"Connection", "Event", "Monitoring", "POSITIONS" };
 
         /// <summary>
         /// The levels for the subscription.
@@ -37,14 +42,42 @@ namespace CSDataCollector.Input
         /// <param name="_sAddress"></param>
         public InputManager(string _sAddress)
 	    {
+            // initialize the parser.
             parser = new DataParser();
-            Client = new MqttClient(IPAddress.Parse(_sAddress));
-            Client.Connect(Guid.NewGuid().ToString());
 
+            // setup of the client.
+            Client = new MqttClient(_sAddress, 16258, false, null, MqttSslProtocols.None);
+            Client.ConnectionClosed += Client_ConnectionClosed;
+            Client.MqttMsgSubscribed += Client_MqttMsgSubscribed;
+            Client.MqttMsgPublishReceived += MessageReceived;
+            Client.ProtocolVersion = MqttProtocolVersion.Version_3_1_1;
+            byte response = Client.Connect(Guid.NewGuid().ToString(), "niels", "12345");
+            
+            // check if the connection is made else print the problem and return.
+            if (Client.IsConnected)
+            {
+                Connected = true;
+            }
+            else
+            {
+                Console.WriteLine("The connection is not made, the return code is : " + response);
+                return;
+            }
             Client.Subscribe(subjects, qosLevels);
 
-            Client.MqttMsgPublishReceived += MessageReceived;
+
 	    }
+
+        private void Client_ConnectionClosed(object sender, EventArgs e)
+        {
+            Connected = false;
+        }
+
+        private void Client_MqttMsgSubscribed(object sender, MqttMsgSubscribedEventArgs e)
+        {
+            Console.WriteLine("we are subscribed");
+            Console.WriteLine(e.ToString());
+        }
 
 
         /// <summary>
@@ -54,9 +87,9 @@ namespace CSDataCollector.Input
         /// <param name="e"></param>
         public void MessageReceived(object sender, MqttMsgPublishEventArgs e)
         {
-            parser.ParseData(e.Message);
+            Console.WriteLine("The message is received : " + e.Topic);
+            parser.ParseData(e.Message, e.Topic);
         }
-
 
 
     }
