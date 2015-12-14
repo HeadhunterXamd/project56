@@ -31,5 +31,19 @@ namespace CSDataCollector.WrapperClasses
             return new DateTime(int.Parse(jmd[0]), int.Parse(jmd[1]), int.Parse(jmd[2]), int.Parse(hmsn[0]), int.Parse(hmsn[1]), int.Parse(hmsn[2]));
         }
 
+        /// <summary>
+        /// ToString method to format the datetime for mysql.
+        /// </summary>
+        /// <param name="_cDateTime"></param>
+        /// <returns></returns>
+        public string DateTimeToString(DateTime _cDateTime)
+        {
+            string firstpart = _cDateTime.Date.ToString();
+            string secondpart = _cDateTime.TimeOfDay.ToString().Split('.')[0];
+            string[] firstnew = firstpart.Split(' ')[0].Split('-');
+            string fixedFirstPart = "" + firstnew[2] + "-" + firstnew[1] + "-" + firstnew[0];
+
+            return fixedFirstPart + " " + secondpart;
+        }
     }
 }

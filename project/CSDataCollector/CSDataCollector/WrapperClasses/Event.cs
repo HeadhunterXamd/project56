@@ -16,11 +16,7 @@ namespace CSDataCollector.WrapperClasses
         {
             get
             {
-                return m_cDateTime.ToString();
-            }
-            set
-            {
-                m_cDateTime = DateTime.Parse(value.ToString());
+                return DateTimeToString(m_cDateTime);
             }
         }
 

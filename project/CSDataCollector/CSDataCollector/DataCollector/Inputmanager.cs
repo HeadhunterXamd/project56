@@ -68,11 +68,21 @@ namespace CSDataCollector.Input
 
 	    }
 
+        /// <summary>
+        /// if the connection is closed set the boolean.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Client_ConnectionClosed(object sender, EventArgs e)
         {
             Connected = false;
         }
 
+        /// <summary>
+        /// The event received when the subscription has been accepted.
+        /// </summary>
+        /// <param name="sender"></param>
+        /// <param name="e"></param>
         private void Client_MqttMsgSubscribed(object sender, MqttMsgSubscribedEventArgs e)
         {
             Console.WriteLine("we are subscribed");
@@ -87,7 +97,6 @@ namespace CSDataCollector.Input
         /// <param name="e"></param>
         public void MessageReceived(object sender, MqttMsgPublishEventArgs e)
         {
-            Console.WriteLine("The message is received : " + e.Topic);
             parser.ParseData(e.Message, e.Topic);
         }
 

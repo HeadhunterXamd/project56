@@ -1,4 +1,5 @@
-﻿using System;
+﻿using CSDataCollector.WrapperClasses;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
@@ -11,18 +12,16 @@ namespace CSDataCollector
     {
         static void Main(string[] args)
         {
-            //FileInfo file = new FileInfo("../../test.json");
+            // Make a connection with the mqtt broker and subscribe to several topics.
+            //Input.InputManager man = new Input.InputManager("m20.cloudmqtt.com");
 
-            //string data = file.OpenText().ReadToEnd();
+            // the database manager is separate from the chain so it can keep itself on a separate thread.
+            // in the constructor we can subscribe to the bufferfull event of the DataParser.
+            //DatabaseManagment.DbManager dbman = new DatabaseManagment.DbManager();
 
-            //Input.DataParser d = new Input.DataParser();
-            //d.DecodeData(data, "Connection");
-            //Console.In.Read();
-
-
-            Input.InputManager man = new Input.InputManager("m20.cloudmqtt.com");
-
-
+            Topic t = new Topic();
+            t.DateTimeToString(DateTime.Now);
+            Console.In.Read();
 
         }
     }

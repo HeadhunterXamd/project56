@@ -15,13 +15,24 @@ namespace CSDataCollector.Input
         /// The buffer which contains the data to be sent to the DBManager <para/>
         /// The data is topic->column->list of data in chronological order.
         /// </summary>
-        public Dictionary<string, Dictionary<string, List<string>>> buffer { get; set; }
+        public Queue<Topic> buffer { get; set; }
 
-        public delegate void OnBufferFull(Dictionary<string, Dictionary<string, List<string>>> data);
 
+        /// <summary>
+        /// The delegate function where the <see cref="BufferFull"/> event is based on.
+        /// </summary>
+        /// <param name="data">The buffer when it is full.</param>
+        public delegate void OnBufferFull(Queue<Topic> data);
+
+        /// <summary>
+        /// The bufferfull event that is called when the buffer has 20 or more elements inside.
+        /// </summary>
         private event OnBufferFull BufferFull;
 
 
+        /// <summary>
+        /// The instance.
+        /// </summary>
         private static DataParser m_cInstance;
         
 
@@ -37,28 +48,23 @@ namespace CSDataCollector.Input
             }
         }
 
-
-        /// <summary>
-        /// The database manager to send the data to so the data can be sent to the database.
-        /// </summary>
-        private DatabaseManagment.DbManager manager { get; set; }
-
         /// <summary>
         /// The dataparser responsible for the parsing of the incoming messages of the mqtt broker.
         /// </summary>
         public DataParser()
         {
             m_cInstance = this;
-            manager = new DatabaseManagment.DbManager();
-            buffer = new Dictionary<string, Dictionary<string, List<string>>>();
+            buffer = new Queue<Topic>();
         }
 
         /// <summary>
         /// Parse the byte array into a readable string.
         /// </summary>
-        /// <param name="_lData"></param>
+        /// <param name="_lData">The incoming byte array from the message of the broker</param>
+        /// <param name="_sTopic">The topic where this message comes from.</param>
         public void ParseData(byte[] _lData, string _sTopic)
         {
+            // the standard string encoding is used by mqtt so we use the same for decoding.
             string data = Encoding.UTF8.GetString(_lData);
             DecodeData(data, _sTopic);
 
@@ -67,7 +73,8 @@ namespace CSDataCollector.Input
         /// <summary>
         /// Here we decode the JSON code.
         /// </summary>
-        /// <param name="_sData"></param>
+        /// <param name="_sData">The data decoded into a string of json.</param>
+        /// <param name="_sTopic">The topic from this message.</param>
         public void DecodeData(string _sData, string _sTopic)
         {
             Topic item = null;
@@ -92,10 +99,32 @@ namespace CSDataCollector.Input
                 Console.WriteLine("The topic is not correct. " + _sTopic);
                 return;
             }
-            item.MessageTopic = _sTopic;
-            Connection test = item as Connection;
-            Console.WriteLine(test.dateTime);
+            // check if the decoding worked, else it will show an error.
+            if(item != null)
+            {
+                item.MessageTopic = _sTopic;
+                FillBuffer(item);
+            }
+            else
+            {
+                throw new Exception("The message from topic " + _sTopic + " couldn't be decoded from json");
+            }
         }
+
+
+        /// <summary>
+        /// Add the item to the buffer
+        /// </summary>
+        /// <param name="_cItem"></param>
+        private void FillBuffer(Topic _cItem)
+        {
+            buffer.Enqueue(_cItem);
+            if(buffer.Count >= 20)
+            {
+                BufferFull(buffer);
+            }
+        }
+
 
         /// <summary>
         /// Subscribe to the Buffer Full event.
