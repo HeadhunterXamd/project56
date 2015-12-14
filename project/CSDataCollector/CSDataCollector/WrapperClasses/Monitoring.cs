@@ -20,42 +20,5 @@ namespace CSDataCollector.WrapperClasses
         public double max { get; private set; }
 
         public double sum { get; private set; }
-
-
-
-        /*"unitId": "14100071",
-  "beginTime": {
-    "date": {
-      "year": 2015,
-      "month": 3,
-      "day": 10
-    },
-    "time": {
-      "hour": 7,
-      "minute": 22,
-      "second": 21,
-      "nano": 0
-    }
-  },
-  "endTime": {
-    "date": {
-      "year": 2015,
-      "month": 3,
-      "day": 10
-    },
-    "time": {
-      "hour": 7,
-      "minute": 23,
-      "second": 20,
-      "nano": 0
-    }
-  },
-  "type": "Gps/GpsGyroMean",
-  "min": 27024.23,
-  "max": 35480.5,
-  "sum": 1902215.0*/
-
-
-
     }
 }
