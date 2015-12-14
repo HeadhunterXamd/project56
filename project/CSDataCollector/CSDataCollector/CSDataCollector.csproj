@@ -55,6 +55,7 @@
     <Compile Include="DataCollector\DbManager.cs" />
     <Compile Include="WrapperClasses\Event.cs" />
     <Compile Include="DataCollector\Inputmanager.cs" />
+    <Compile Include="DataCollector\MySQLClient.cs" />
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="WrapperClasses\Connection.cs" />
