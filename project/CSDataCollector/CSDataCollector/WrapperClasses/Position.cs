@@ -1,6 +1,9 @@
-﻿using System;
+﻿using Newtonsoft.Json;
+using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -26,31 +29,39 @@ namespace CSDataCollector.WrapperClasses
 
         public string quality { get; private set; }
 
-        public DateTime dateTime { get; private set; }
+        private DateTime m_cDateTime;
+
+        public string dateTime
+        {
+            get
+            {
+                return DateTimeToString(m_cDateTime);
+            }
+            set
+            {
+                m_cDateTime = ParseDate(value);
+            }
+        }
 
         /// <summary>
         /// standard constructor
         /// </summary>
-        /// <param name="rdx"></param>
-        /// <param name="rdy"></param>
-        /// <param name="speed"></param>
-        /// <param name="course"></param>
-        /// <param name="numsat"></param>
-        /// <param name="hdop"></param>
-        /// <param name="quality"></param>
-        /// <param name="datetime"></param>
-        /// <param name="UnitID"></param>
-        public Position(double rdx, double rdy, double speed, double course, int numsat, int hdop, string quality, string datetime, int UnitID)
+        /// <param name="_cObject"></param>
+        public Position(JObject _cObject)
         {
-            rDx = rdx;
-            rDy = rdy;
-            this.speed = speed;
-            this.course = course;
-            numSattellites = numsat;
-            this.hdop = hdop;
-            this.quality = quality;
-            dateTime = ParseDate(datetime);
-            UnitId = UnitID;
+            ValidMessage = true;
+            PropertyInfo[] finfo = GetType().GetProperties();
+            foreach (PropertyInfo property in finfo)
+            {
+                if (property.Name.Equals("ValidMessage")) { continue; }
+                property.SetValue(this, Convert.ChangeType(_cObject.GetValue(property.Name), property.PropertyType));
+            }
+        }
+
+
+        public override string ToString()
+        {
+            return "rDx " + rDx + " - rDy " + rDy + " - speed " + speed + " - course " + course + " - numSattellites " + numSattellites + " - hdop " + hdop + " - quality " + quality + " - dateTime " + dateTime;
         }
     }
 }

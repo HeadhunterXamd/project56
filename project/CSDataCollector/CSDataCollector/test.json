@@ -1,6 +1,11 @@
 ﻿{
-    "dateTime": "2015-3-15T14-11-1",
-    "port": "Connection",
-    "value": 0,
-    "unitId": 999
+  "rDx": "161766.58056834",
+  "rDy": "386623.268053997",
+  "speed": 3.0,
+  "course": 353.0,
+  "numSattellites": 10,
+  "hdop": 11,
+  "quality": "Gps",
+  "dateTime":"2015-03-10T02:13:50",
+  "unitId": 357566000058114
 }

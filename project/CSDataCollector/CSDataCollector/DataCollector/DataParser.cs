@@ -5,6 +5,8 @@ using System.Text;
 using System.Threading.Tasks;
 using Newtonsoft.Json;
 using CSDataCollector.WrapperClasses;
+using Newtonsoft.Json.Linq;
+using System.IO;
 
 namespace CSDataCollector.Input
 {
@@ -34,8 +36,12 @@ namespace CSDataCollector.Input
         /// The instance.
         /// </summary>
         private static DataParser m_cInstance;
-        
 
+
+        /// <summary>
+        /// The subjects we will subscribe to.
+        /// </summary>
+        private string[] subjects = new string[4] { "CONNECTIONS", "EVENTS", "MONITORING", "POSITIONS" };
 
         /// <summary>
         /// Static getter for the Dataparser for utility.
@@ -65,9 +71,15 @@ namespace CSDataCollector.Input
         public void ParseData(byte[] _lData, string _sTopic)
         {
             // the standard string encoding is used by mqtt so we use the same for decoding.
-            string data = Encoding.UTF8.GetString(_lData);
-            DecodeData(data, _sTopic);
-
+            try
+            {
+                string data = Encoding.UTF8.GetString(_lData);
+                DecodeData(data, _sTopic);
+            }
+            catch (Exception e)
+            {
+                Program.Log(e.Message);
+            }
         }
 
         /// <summary>
@@ -78,32 +90,36 @@ namespace CSDataCollector.Input
         public void DecodeData(string _sData, string _sTopic)
         {
             Topic item = null;
-            if (_sTopic.Equals("Connection"))
+            JObject ob = JObject.Load(new JsonTextReader(new StringReader(_sData)));
+            if (_sTopic.Equals("CONNECTIONS"))
             {
-               item = JsonConvert.DeserializeObject<Connection>(_sData);
+                item = new Connection(ob);
             }
-            else if (_sTopic.Equals("Event"))
+            else if (_sTopic.Equals("EVENTS"))
             {
-                item = JsonConvert.DeserializeObject<Event>(_sData);
+                item = new Event(ob);
             }
-            else if (_sTopic.Equals("Monitoring"))
+            else if (_sTopic.Equals("MONITORING"))
             {
-                item = JsonConvert.DeserializeObject<Monitoring>(_sData);
+                item = new Monitoring(ob);
             }
-            else if (_sTopic.Equals("Position"))
+            else if (_sTopic.Equals("POSITIONS"))
             {
-                item = JsonConvert.DeserializeObject<Position>(_sData);
+                item = new Position(ob);
             }
             else
             {
-                Console.WriteLine("The topic is not correct. " + _sTopic);
+                Program.Log("The topic is not correct. " + _sTopic);
                 return;
             }
             // check if the decoding worked, else it will show an error.
             if(item != null)
             {
                 item.MessageTopic = _sTopic;
-                FillBuffer(item);
+                if(item.ValidMessage == true)
+                {
+                    FillBuffer(item);
+                }
             }
             else
             {
@@ -121,6 +137,7 @@ namespace CSDataCollector.Input
             buffer.Enqueue(_cItem);
             if(buffer.Count >= 20)
             {
+                Console.WriteLine("The Buffer is full... \n\n\n\n");
                 BufferFull(buffer);
             }
         }

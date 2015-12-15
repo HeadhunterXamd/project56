@@ -1,5 +1,7 @@
 ﻿
+using Newtonsoft.Json.Linq;
 using System;
+using System.Reflection;
 
 namespace CSDataCollector.WrapperClasses
 {
@@ -18,14 +20,21 @@ namespace CSDataCollector.WrapperClasses
             {
                 return DateTimeToString(m_cDateTime);
             }
+            set
+            {
+                m_cDateTime = ParseDate(value);
+            }
         }
 
-        public Event(string port, string value, string dateTime, string UnitId)
+        public Event(JObject _cObject)
         {
-            this.port = port;
-            this.UnitId = int.Parse(UnitId);
-            this.value = int.Parse(value);
-            m_cDateTime = ParseDate(dateTime);
+            ValidMessage = true;
+            PropertyInfo[] finfo = GetType().GetProperties();
+            foreach (PropertyInfo property in finfo)
+            {
+                if (property.Name.Equals("ValidMessage")) { continue; }
+                property.SetValue(this, Convert.ChangeType(_cObject.GetValue(property.Name), property.PropertyType));
+            }
         }
     }
 }

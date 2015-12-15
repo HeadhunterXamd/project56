@@ -16,9 +16,6 @@ namespace CSDataCollector.DatabaseManagment
             Input.DataParser.Instance.SubscribeToBufferFullEvent(test);
         }
 
-
-
-
         private void test(Queue<Topic> _buffer)
         {
             bool hasnext = true;
@@ -32,14 +29,22 @@ namespace CSDataCollector.DatabaseManagment
                 if (item.GetType() == typeof(Monitoring))
                 {
                     Monitoring m = item as Monitoring;
+                    Console.WriteLine(m);
                 }
                 else if (item.GetType() == typeof(Event))
                 {
                     Event e = item as Event;
+                    Console.WriteLine(e);
                 }
                 else if (item.GetType() == typeof(Connection))
                 {
                     Connection c = item as Connection;
+                    Console.WriteLine(c);
+                }
+                else if(item.GetType() == typeof(Position))
+                {
+                    Position p = item as Position;
+                    Console.WriteLine(p);
                 }
             }
 

@@ -10,19 +10,39 @@ namespace CSDataCollector
 {
     class Program
     {
+
+        private static FileInfo file;
+
         static void Main(string[] args)
         {
+
+            file = new FileInfo("DebugLog.log");
             // Make a connection with the mqtt broker and subscribe to several topics.
-            //Input.InputManager man = new Input.InputManager("m20.cloudmqtt.com");
+            Input.InputManager man = new Input.InputManager("145.24.222.132");
 
-            // the database manager is separate from the chain so it can keep itself on a separate thread.
-            // in the constructor we can subscribe to the bufferfull event of the DataParser.
-            //DatabaseManagment.DbManager dbman = new DatabaseManagment.DbManager();
+            //// --------------------------------------------- DEBUGGING -------------------------------------------
+            //Input.DataParser p = new Input.DataParser();
+            //FileInfo file2 = new FileInfo("test.json");
+            //StreamReader reader = file2.OpenText();
+            //string data = reader.ReadToEnd();
 
-            Topic t = new Topic();
-            t.DateTimeToString(DateTime.Now);
-            Console.In.Read();
+            //p.DecodeData(data, "POSITIONS");
 
+            //Console.In.Read();
+            //// --------------------------------------------- DEBUGGING -------------------------------------------
+
+        }
+
+
+        /// <summary>
+        /// Write a message to the log file prepared in this "class"
+        /// </summary>
+        /// <param name="_sMessage"></param>
+        public static void Log(string _sMessage)
+        {
+            StreamWriter writer = file.AppendText();
+            writer.WriteLine(_sMessage);
+            writer.Close();
         }
     }
 }

@@ -1,6 +1,8 @@
-﻿using System;
+﻿using Newtonsoft.Json.Linq;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -18,21 +20,24 @@ namespace CSDataCollector.WrapperClasses
         public string dateTime {
             get
             {
-                return m_cDateTime.ToString();
+                return DateTimeToString(m_cDateTime);
             }
             set
             {
-                m_cDateTime = DateTime.Parse(value.ToString());
+                m_cDateTime = ParseDate(value);
             }
 
         }
 
-        public Connection(string port, string value, string dateTime, string UnitId)
+        public Connection(JObject _cObject)
         {
-            this.port = port;
-            this.UnitId = int.Parse(UnitId);
-            this.value = int.Parse(value);
-            m_cDateTime = ParseDate(dateTime);
+            ValidMessage = true;
+            PropertyInfo[] propertyInfo = GetType().GetProperties();
+            foreach (PropertyInfo property in propertyInfo)
+            {
+                if (property.Name.Equals("ValidMessage")) { continue; }
+                property.SetValue(this, Convert.ChangeType(_cObject.GetValue(property.Name), property.PropertyType));
+            }
         }
     }
 }

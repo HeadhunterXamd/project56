@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Net;
 using System.Text;
 using uPLibrary.Networking.M2Mqtt;
 using uPLibrary.Networking.M2Mqtt.Messages;
@@ -27,14 +28,14 @@ namespace CSDataCollector.Input
         /// <summary>
         /// The subjects we will subscribe to.
         /// </summary>
-        private string[] subjects = new string[4] {"Connection", "Event", "Monitoring", "POSITIONS" };
+        private string[] subjects = new string[4] {"CONNECTIONS", "EVENTS", "MONITORING", "POSITIONS" };
 
         /// <summary>
         /// The levels for the subscription.
         /// </summary>
         private byte[] qosLevels = { MqttMsgBase.QOS_LEVEL_AT_MOST_ONCE, MqttMsgBase.QOS_LEVEL_AT_MOST_ONCE, MqttMsgBase.QOS_LEVEL_AT_MOST_ONCE, MqttMsgBase.QOS_LEVEL_AT_MOST_ONCE };
 
-
+        private DatabaseManagment.DbManager databaseManager { get; set; }
 
         /// <summary>
         /// The inputManager, this class manages the connection to the broker.
@@ -44,23 +45,37 @@ namespace CSDataCollector.Input
 	    {
             // initialize the parser.
             parser = new DataParser();
+            databaseManager = new DatabaseManagment.DbManager();
+
+            try
+            {
+                IPHostEntry hostEntry = Dns.GetHostEntry(_sAddress);
+                Console.WriteLine(hostEntry);
+                string hostname = hostEntry.HostName;
+                Client = new MqttClient(hostname, 8883, false, null, MqttSslProtocols.None);
+            }
+            catch (Exception e)
+            {
+                Program.Log(e.Message);
+                Client = new MqttClient(IPAddress.Parse(_sAddress), 8883, false, null, MqttSslProtocols.None);
+            }
 
             // setup of the client.
-            Client = new MqttClient(_sAddress, 16258, false, null, MqttSslProtocols.None);
             Client.ConnectionClosed += Client_ConnectionClosed;
             Client.MqttMsgSubscribed += Client_MqttMsgSubscribed;
             Client.MqttMsgPublishReceived += MessageReceived;
             Client.ProtocolVersion = MqttProtocolVersion.Version_3_1_1;
-            byte response = Client.Connect(Guid.NewGuid().ToString(), "niels", "12345");
+            byte response = Client.Connect(Guid.NewGuid().ToString());
             
             // check if the connection is made else print the problem and return.
             if (Client.IsConnected)
             {
                 Connected = true;
+                Console.WriteLine("The connection is made " + response);
             }
             else
             {
-                Console.WriteLine("The connection is not made, the return code is : " + response);
+                Program.Log("The connection is not made, the return code is : " + response);
                 return;
             }
             Client.Subscribe(subjects, qosLevels);
@@ -85,8 +100,7 @@ namespace CSDataCollector.Input
         /// <param name="e"></param>
         private void Client_MqttMsgSubscribed(object sender, MqttMsgSubscribedEventArgs e)
         {
-            Console.WriteLine("we are subscribed");
-            Console.WriteLine(e.ToString());
+            Program.Log("The client is subscribed to the broker... \n" + e.ToString());
         }
 
 
