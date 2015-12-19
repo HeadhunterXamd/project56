@@ -91,29 +91,37 @@ namespace CSDataCollector.Input
         {
             Topic item = null;
             JObject ob = JObject.Load(new JsonTextReader(new StringReader(_sData)));
-            if (_sTopic.Equals("CONNECTIONS"))
+            try
             {
-                item = new Connection(ob);
+                if (_sTopic.Equals("CONNECTIONS"))
+                {
+                    item = new Connection(ob);
+                }
+                else if (_sTopic.Equals("EVENTS"))
+                {
+                    item = new Event(ob);
+                }
+                else if (_sTopic.Equals("MONITORING"))
+                {
+                    item = new Monitoring(ob);
+                }
+                else if (_sTopic.Equals("POSITIONS"))
+                {
+                    item = new Position(ob);
+                }
+                else
+                {
+                    Program.Log("The topic is not correct. " + _sTopic);
+                    return;
+                }
             }
-            else if (_sTopic.Equals("EVENTS"))
+            catch (Exception e)
             {
-                item = new Event(ob);
-            }
-            else if (_sTopic.Equals("MONITORING"))
-            {
-                item = new Monitoring(ob);
-            }
-            else if (_sTopic.Equals("POSITIONS"))
-            {
-                item = new Position(ob);
-            }
-            else
-            {
-                Program.Log("The topic is not correct. " + _sTopic);
+                Program.Log(e.Message);
                 return;
             }
             // check if the decoding worked, else it will show an error.
-            if(item != null)
+            if (item != null)
             {
                 item.MessageTopic = _sTopic;
                 if(item.ValidMessage == true)
