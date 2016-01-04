@@ -37,12 +37,6 @@ namespace CSDataCollector.Input
         /// </summary>
         private static DataParser m_cInstance;
 
-
-        /// <summary>
-        /// The subjects we will subscribe to.
-        /// </summary>
-        private string[] subjects = new string[4] { "CONNECTIONS", "EVENTS", "MONITORING", "POSITIONS" };
-
         /// <summary>
         /// Static getter for the Dataparser for utility.
         /// </summary>

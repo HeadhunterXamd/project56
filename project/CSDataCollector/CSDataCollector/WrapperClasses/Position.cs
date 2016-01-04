@@ -58,6 +58,9 @@ namespace CSDataCollector.WrapperClasses
             }
         }
 
+        public Position()
+        {
+        }
 
         public override string ToString()
         {

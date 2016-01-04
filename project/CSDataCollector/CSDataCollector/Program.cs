@@ -22,7 +22,7 @@ namespace CSDataCollector
 
             //// --------------------------------------------- DEBUGGING -------------------------------------------
             //Input.DataParser p = new Input.DataParser();
-            //FileInfo file2 = new FileInfo("test.json");
+            //FileInfo file2 = new FileInfo("../../test.json");
             //StreamReader reader = file2.OpenText();
             //string data = reader.ReadToEnd();
 

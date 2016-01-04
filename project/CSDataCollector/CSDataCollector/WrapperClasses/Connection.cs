@@ -39,5 +39,9 @@ namespace CSDataCollector.WrapperClasses
                 property.SetValue(this, Convert.ChangeType(_cObject.GetValue(property.Name), property.PropertyType));
             }
         }
+
+        public Connection()
+        {
+        }
     }
 }

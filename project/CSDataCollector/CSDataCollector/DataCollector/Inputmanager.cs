@@ -52,12 +52,12 @@ namespace CSDataCollector.Input
                 IPHostEntry hostEntry = Dns.GetHostEntry(_sAddress);
                 Console.WriteLine(hostEntry);
                 string hostname = hostEntry.HostName;
-                Client = new MqttClient(hostname, 8883, false, null, MqttSslProtocols.None);
+                Client = new MqttClient(hostname, 8883, false, null, null, MqttSslProtocols.None);
             }
             catch (Exception e)
             {
                 Program.Log(e.Message);
-                Client = new MqttClient(IPAddress.Parse(_sAddress), 8883, false, null, MqttSslProtocols.None);
+                Client = new MqttClient(IPAddress.Parse(_sAddress), 8883, false, null, null, MqttSslProtocols.None);
             }
 
             // setup of the client.
@@ -111,6 +111,7 @@ namespace CSDataCollector.Input
         /// <param name="e"></param>
         public void MessageReceived(object sender, MqttMsgPublishEventArgs e)
         {
+            Console.WriteLine(e.Topic);
             parser.ParseData(e.Message, e.Topic);
         }
 
