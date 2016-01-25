@@ -11,7 +11,7 @@ namespace CSDataCollector.DatabaseManagment
     class DbManager
     {
 
-        private MySQLClient connDB = new MySQLClient("localhost", "project56", "root", "", 3306);
+        //private MySQLClient connDB = new MySQLClient("localhost", "project56", "root", "", 3306);
         public DbManager()
         {
             Input.DataParser.Instance.SubscribeToBufferFullEvent(addTopicsToDatabase);
@@ -30,25 +30,25 @@ namespace CSDataCollector.DatabaseManagment
                 if (item.GetType() == typeof(Monitoring))
                 {
                     Monitoring m = item as Monitoring;
-                    connDB.InsertMonitoring(m);
+                    //connDB.InsertMonitoring(m);
                     Console.WriteLine(m);
                 }
                 else if (item.GetType() == typeof(Event))
                 {
                     Event e = item as Event;
-                    connDB.InsertEvents(e);
+                    //connDB.InsertEvents(e);
                     Console.WriteLine(e);
                 }
                 else if (item.GetType() == typeof(Connection))
                 {
                     Connection c = item as Connection;
-                    connDB.InsertConnection(c);
+                    //connDB.InsertConnection(c);
                     Console.WriteLine(c);
                 }
                 else if(item.GetType() == typeof(Position))
                 {
                     Position p = item as Position;
-                    connDB.InsertPosition(p);
+                    //connDB.InsertPosition(p);
                     Console.WriteLine(p);
                 }
             }
