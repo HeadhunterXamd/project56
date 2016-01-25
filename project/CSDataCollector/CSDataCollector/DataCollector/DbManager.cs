@@ -1,5 +1,5 @@
 ﻿using CSDataCollector.WrapperClasses;
-using MySQLClass;
+//using MySQLClass;
 using System;
 using System.Collections.Generic;
 using System.Linq;
