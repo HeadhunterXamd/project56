@@ -1,9 +1,9 @@
 version: 1.0.{build}
 build:
   verbosity: minimal
-branches:
-# whitelist
-only:
-  - master
+  branches:
+  # whitelist
+  only:
+    - master
   
 configuration: Release
