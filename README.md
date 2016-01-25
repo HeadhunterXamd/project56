@@ -8,6 +8,10 @@ project of group:
 - Ashwen Alakhramsing
 - Martijn Dolders
 
+#### CI
+[![Build status](https://ci.appveyor.com/api/projects/status/vlh6fowsibfw1lga?svg=true)](https://ci.appveyor.com/project/HeadhunterXamd/project56)
+
+
 #### Documentation
 [![Documentation Status](https://readthedocs.org/projects/project56/badge/?version=latest)](http://project56.readthedocs.org/en/latest/?badge=latest)
                 
