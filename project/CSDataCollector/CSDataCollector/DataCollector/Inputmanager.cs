@@ -52,7 +52,7 @@ namespace CSDataCollector.Input
                 IPHostEntry hostEntry = Dns.GetHostEntry(_sAddress);
                 Console.WriteLine(hostEntry);
                 string hostname = hostEntry.HostName;
-                Client = new MqttClient(hostname, 8883, false, null, null, MqttSslProtocols.None);
+                Client = new MqttClient(hostname, 8883);
             }
             catch (Exception e)
             {
