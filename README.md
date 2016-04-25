@@ -1,4 +1,6 @@
 ﻿# project56
+
+[![Join the chat at https://gitter.im/HeadhunterXamd/project56](https://badges.gitter.im/HeadhunterXamd/project56.svg)](https://gitter.im/HeadhunterXamd/project56?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 project of group: 
 ### flats
 
